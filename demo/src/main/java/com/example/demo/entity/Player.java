@@ -17,12 +17,16 @@ public class Player {
     @Column(nullable = false)
     private String name;
 
-    // Koppling till Tournament
     @ManyToOne
     @JoinColumn(name = "tournament_id", nullable = false)
     private Tournament tournament;
 
-    // Relation till matcher (som p1, p2 eller winner)
+    @Column(name = "seed")
+    private Integer seed;
+
+    @Column(name = "player_order")
+    private Integer playerOrder;
+
     @OneToMany(mappedBy = "p1")
     private List<Match> matchesAsP1;
 

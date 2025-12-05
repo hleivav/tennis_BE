@@ -9,4 +9,6 @@ import java.util.List;
 @Repository
 public interface PlayerRepository extends JpaRepository<Player, Long> {
     List<Player> findByTournamentId(Long tournamentId);
+    List<Player> findByTournamentIdOrderByPlayerOrder(Long tournamentId); // valfritt, för ordning
+    List<Player> findByTournamentIdOrderBySeedAsc(Long tournamentId);     // valfritt, för seed
 }

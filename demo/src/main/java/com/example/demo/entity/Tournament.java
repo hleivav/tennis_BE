@@ -28,8 +28,9 @@ public class Tournament {
     private Integer seedCount;
     private String reportPassword;
 
-    @Column(nullable = false)
-    private LocalDateTime createdAt = LocalDateTime.now();
+    @Column(nullable = false, updatable = false)
+    @org.hibernate.annotations.CreationTimestamp
+    private LocalDateTime createdAt;
 
     // Koppling till Admin
     @ManyToOne
@@ -37,11 +38,9 @@ public class Tournament {
     private Admin createdBy;
 
     // Relationer till players och matches
-    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Player> players;
 
-    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL)
+    @OneToMany(mappedBy = "tournament", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Match> matches;
-
-    // getters och setters
 }

@@ -1,5 +1,6 @@
 package com.example.demo.controller;
 
+import com.example.demo.dto.AuthResult;
 import com.example.demo.dto.LoginRequest;
 import com.example.demo.dto.AuthResponse;
 import com.example.demo.service.AuthService;
@@ -18,9 +19,9 @@ public class AuthController {
 
     @PostMapping("/login")
     public ResponseEntity<?> login(@RequestBody LoginRequest loginRequest) {
-        String token = authService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
-        if (token != null) {
-            return ResponseEntity.ok(new AuthResponse(token));
+        AuthResponse response = authService.authenticate(loginRequest.getEmail(), loginRequest.getPassword());
+        if (response != null) {
+            return ResponseEntity.ok(response);
         } else {
             return ResponseEntity.status(HttpStatus.UNAUTHORIZED).body("Invalid credentials");
         }

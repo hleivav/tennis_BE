@@ -1,7 +1,6 @@
 package com.example.demo.controller;
 
 import com.example.demo.dto.PlayerDto;
-import com.example.demo.entity.Player;
 import com.example.demo.service.PlayerService;
 import org.springframework.web.bind.annotation.*;
 
@@ -9,6 +8,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/players")
+@CrossOrigin // Enables CORS for frontend-backend communication
 public class PlayerController {
     private final PlayerService service;
 
@@ -22,7 +22,8 @@ public class PlayerController {
     }
 
     @PostMapping
-    public PlayerDto createPlayer(@RequestBody Player player) {
-        return service.create(player);
+    public PlayerDto createPlayer(@RequestBody PlayerDto dto) {
+        System.out.println("[DEBUG] Incoming PlayerDto: " + dto);
+        return service.create(dto);
     }
 }
