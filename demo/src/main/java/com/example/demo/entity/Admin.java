@@ -24,10 +24,16 @@ public class Admin {
     @Column(nullable = false)
     private String club;
 
+    // För lösenordsåterställning
+    @Column
+    private String resetToken;
+
+    @Column
+    private LocalDateTime resetTokenExpiry;
+
     public Long getId() {
         return id;
     }
-
 
     @Column(nullable = false, updatable = false)
     private LocalDateTime createdAt;
@@ -39,6 +45,4 @@ public class Admin {
     protected void onCreate() {
         this.createdAt = LocalDateTime.now();
     }
-
-
 }

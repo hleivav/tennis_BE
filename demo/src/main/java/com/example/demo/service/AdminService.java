@@ -8,6 +8,7 @@ import org.springframework.stereotype.Service;
 import org.springframework.security.crypto.password.PasswordEncoder;   // <-- lägg till denna import
 
 import java.util.List;
+import java.util.Optional;
 import java.util.stream.Collectors;
 
 @Service
@@ -38,8 +39,11 @@ public class AdminService {
     }
 
     public AdminDto findByEmail(String email) {
-        Admin admin = repo.findByEmail(email);
-        return admin != null ? toDto(admin) : null;
+        Optional<Admin> adminOpt = repo.findByEmail(email);
+        if (adminOpt.isPresent()) {
+            return toDto(adminOpt.get());
+        }
+        return null;
     }
 
     private AdminDto toDto(Admin admin) {

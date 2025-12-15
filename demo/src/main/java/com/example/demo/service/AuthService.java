@@ -6,6 +6,8 @@ import com.example.demo.repository.AdminRepository;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import java.util.Optional;
+
 @Service
 public class AuthService {
     private final AdminRepository adminRepository;
@@ -17,10 +19,13 @@ public class AuthService {
     }
 
     public AuthResponse authenticate(String email, String password) {
-        Admin admin = adminRepository.findByEmail(email);
-        if (admin != null && passwordEncoder.matches(password, admin.getPasswordHash())) {
-            // Return a dummy token and adminId
-            return new AuthResponse("dummy-token", admin.getId());
+        Optional<Admin> adminOpt = adminRepository.findByEmail(email);
+
+        if (adminOpt.isPresent()) {
+            Admin admin = adminOpt.get();
+            if (passwordEncoder.matches(password, admin.getPasswordHash())) {
+                return new AuthResponse("dummy-token", admin.getId());
+            }
         }
         return null;
     }
