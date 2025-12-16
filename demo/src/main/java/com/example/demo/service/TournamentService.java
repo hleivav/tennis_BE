@@ -167,7 +167,8 @@ public class TournamentService {
         Tournament tournament = tournamentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tournament not found"));
 
-        if (!tournament.getCreatedBy().getId().equals(adminId)) {
+        // Tillåt superadmin (id 1) hantera alla turneringar
+        if (!tournament.getCreatedBy().getId().equals(adminId) && adminId != 1) {
             throw new SecurityException("Du får bara ta bort dina egna turneringar.");
         }
 
@@ -178,7 +179,8 @@ public class TournamentService {
         Tournament tournament = tournamentRepository.findById(id)
                 .orElseThrow(() -> new EntityNotFoundException("Tournament not found"));
 
-        if (!tournament.getCreatedBy().getId().equals(adminId)) {
+        // Tillåt superadmin (id 1) hantera alla turneringar
+        if (!tournament.getCreatedBy().getId().equals(adminId) && adminId != 1) {
             throw new SecurityException("Du får bara ändra dina egna turneringar.");
         }
 
@@ -188,7 +190,7 @@ public class TournamentService {
         // Lägg till fler fält vid behov
 
         Tournament saved = tournamentRepository.save(tournament);
-        return mapToDto(saved); // mapToDto should convert Tournament to TournamentDto
+        return mapToDto(saved);
     }
 
     public TournamentDto findById(Long id) {
