@@ -14,11 +14,10 @@ public class CorsConfig {
             @Override
             public void addCorsMappings(CorsRegistry registry) {
                 registry.addMapping("/**")
-                        .allowedOrigins(
+                        .allowedOriginPatterns(
                                 "http://localhost:5173",
                                 "http://localhost:5174",
-                                "https://tennis-app-one.vercel.app",
-                                "https://tennis-app-git-main-hernan-leivas-projects.vercel.app"
+                                "https://*.vercel.app"
                         )
                         .allowedMethods("GET", "POST", "PUT", "DELETE", "PATCH", "OPTIONS")
                         .allowedHeaders("*")
