@@ -11,10 +11,10 @@ import org.springframework.web.bind.annotation.*;
 @CrossOrigin(origins = {"http://localhost:5173", "http://localhost:5174", "https://tennis-app-one.vercel.app"})
 public class ContactController {
 
-    @Autowired
-    private JavaMailSender mailSender;
+    //@Autowired
+    //private JavaMailSender mailSender;
 
-    @PostMapping("/contact")
+    /*@PostMapping("/contact")
     public ResponseEntity<String> sendContactEmail(@RequestBody ContactRequest request) {
         try {
             SimpleMailMessage message = new SimpleMailMessage();
@@ -34,5 +34,5 @@ public class ContactController {
             e.printStackTrace();
             return ResponseEntity.status(500).body("Kunde inte skicka meddelande: " + e.getMessage());
         }
-    }
+    }*/
 }
