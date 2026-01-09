@@ -48,4 +48,16 @@ public class MatchController {
                     .body("Match not found: " + matchId);
         }
     }
+
+    @PatchMapping("/bulk-schedule")
+    public ResponseEntity<?> bulkUpdateSchedules(@RequestBody List<MatchDto> scheduleUpdates) {
+        System.out.println("[MatchController] Bulk updating schedules for " + scheduleUpdates.size() + " matches");
+        try {
+            List<MatchDto> updated = service.bulkUpdateSchedules(scheduleUpdates);
+            return ResponseEntity.ok(updated);
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body("Failed to update schedules: " + e.getMessage());
+        }
+    }
 }

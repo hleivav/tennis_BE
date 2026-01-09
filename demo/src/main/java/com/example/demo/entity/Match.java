@@ -17,6 +17,12 @@ public class Match {
     private Integer matchNumber;
     private String score;
 
+    @Column(name = "schedule_date")
+    private java.time.LocalDate scheduleDate;
+
+    @Column(name = "schedule_time")
+    private String scheduleTime;
+
     @ManyToOne
     @JoinColumn(name = "tournament_id", nullable = false)
     private Tournament tournament;

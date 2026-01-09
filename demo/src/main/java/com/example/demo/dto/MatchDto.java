@@ -12,10 +12,17 @@ public class MatchDto {
     private String prev1MatchId;
     private String prev2MatchId;
     private Boolean isBye;
-
     private PlayerDto p1;
     private PlayerDto p2;
     private PlayerDto winner;
+    private String scheduleDate;
+    private String scheduleTime;
+
+    public String getScheduleDate() { return scheduleDate; }
+    public void setScheduleDate(String scheduleDate) { this.scheduleDate = scheduleDate; }
+
+    public String getScheduleTime() { return scheduleTime; }
+    public void setScheduleTime(String scheduleTime) { this.scheduleTime = scheduleTime; }
 
     // Getters and Setters
     public String getId() { return id; }

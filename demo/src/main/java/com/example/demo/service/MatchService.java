@@ -44,6 +44,25 @@ public class MatchService {
         return toDto(repo.save(match));
     }
 
+    public List<MatchDto> bulkUpdateSchedules(List<MatchDto> scheduleUpdates) {
+        return scheduleUpdates.stream().map(update -> {
+            Match match = repo.findById(update.getId())
+                    .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Match not found: " + update.getId()));
+            
+            if (update.getScheduleDate() != null && !update.getScheduleDate().isEmpty()) {
+                match.setScheduleDate(java.time.LocalDate.parse(update.getScheduleDate()));
+            } else {
+                match.setScheduleDate(null);
+            }
+            match.setScheduleTime(update.getScheduleTime());
+            
+            System.out.println("[MatchService] Updated schedule for match " + match.getId() + 
+                    ": date=" + match.getScheduleDate() + ", time=" + match.getScheduleTime());
+            
+            return toDto(repo.save(match));
+        }).collect(Collectors.toList());
+    }
+
     public MatchDto updateMatchResult(String matchId, Map<String, Object> updates) {
         Match match = repo.findById(matchId)
                 .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Match not found: " + matchId));
@@ -92,6 +111,10 @@ public class MatchService {
         dto.setPrev1MatchId(m.getPrev1Match() != null ? m.getPrev1Match().getId() : null);
         dto.setPrev2MatchId(m.getPrev2Match() != null ? m.getPrev2Match().getId() : null);
         dto.setIsBye(m.getIsBye());
+        
+        // Mappa schedule-fälten
+        dto.setScheduleDate(m.getScheduleDate() != null ? m.getScheduleDate().toString() : null);
+        dto.setScheduleTime(m.getScheduleTime());
 
         if (m.getP1() != null) {
             PlayerDto p1Dto = new PlayerDto();

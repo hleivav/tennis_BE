@@ -91,6 +91,12 @@ public class TournamentService {
                 match.setRound(md.getRoundTitle());
                 match.setIsBye(md.getIsBye());
                 match.setScore(md.getScore());
+                
+                // Mappa schedule-fälten
+                if (md.getScheduleDate() != null && !md.getScheduleDate().isEmpty()) {
+                    match.setScheduleDate(java.time.LocalDate.parse(md.getScheduleDate()));
+                }
+                match.setScheduleTime(md.getScheduleTime());
 
 // ERSÄTT RADERNA 95-106 I TournamentService.java MED DENNA KOD:
 
@@ -270,6 +276,10 @@ public class TournamentService {
                                 md.setIsBye(match.getIsBye());
                                 md.setPrev1MatchId(match.getPrev1Match() != null ? match.getPrev1Match().getId() : null);
                                 md.setPrev2MatchId(match.getPrev2Match() != null ? match.getPrev2Match().getId() : null);
+                                
+                                // Mappa schedule-fälten
+                                md.setScheduleDate(match.getScheduleDate() != null ? match.getScheduleDate().toString() : null);
+                                md.setScheduleTime(match.getScheduleTime());
                                 return md;
                             })
                             .collect(Collectors.toList())
