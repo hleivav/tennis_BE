@@ -76,19 +76,32 @@ public class MatchService {
 
         // Uppdatera winner
         if (updates.containsKey("winner")) {
-            String winnerName = (String) updates.get("winner");
+            Object winnerObj = updates.get("winner");
+            String winnerName = null;
+            
+            // Hantera både String och Map (JSON objekt)
+            if (winnerObj instanceof String) {
+                winnerName = (String) winnerObj;
+            } else if (winnerObj instanceof java.util.Map) {
+                java.util.Map<?, ?> winnerMap = (java.util.Map<?, ?>) winnerObj;
+                winnerName = (String) winnerMap.get("name");
+            }
+            
+            if (winnerName != null && !winnerName.isEmpty()) {
+                // Hitta spelaren genom att matcha namn i samma turnering
+                com.example.demo.entity.Player winner = match.getTournament().getPlayers().stream()
+                        .filter(p -> p.getName().equals(winnerName))
+                        .findFirst()
+                        .orElse(null);
 
-            // Hitta spelaren genom att matcha namn i samma turnering
-            com.example.demo.entity.Player winner = match.getTournament().getPlayers().stream()
-                    .filter(p -> p.getName().equals(winnerName))
-                    .findFirst()
-                    .orElse(null);
-
-            if (winner != null) {
-                match.setWinner(winner);
-                System.out.println("[MatchService] Setting winner: " + winner.getName());
+                if (winner != null) {
+                    match.setWinner(winner);
+                    System.out.println("[MatchService] Setting winner: " + winner.getName());
+                } else {
+                    System.out.println("[MatchService] Warning: Winner not found in tournament players: " + winnerName);
+                }
             } else {
-                System.out.println("[MatchService] Warning: Winner not found: " + winnerName);
+                System.out.println("[MatchService] Warning: Could not extract winner name from: " + winnerObj);
             }
         }
 
