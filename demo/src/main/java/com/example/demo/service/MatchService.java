@@ -64,7 +64,7 @@ public class MatchService {
     }
 
     public MatchDto updateMatchResult(String matchId, Map<String, Object> updates) {
-        Match match = repo.findById(matchId)
+        Match match = repo.findByIdWithPrevMatches(matchId)
                 .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Match not found: " + matchId));
 
         // Uppdatera score
