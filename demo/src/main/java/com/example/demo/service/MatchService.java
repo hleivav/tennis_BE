@@ -77,7 +77,7 @@ public class MatchService {
         // Uppdatera winner
         if (updates.containsKey("winner")) {
             Object winnerObj = updates.get("winner");
-            String winnerName = null;
+            final String winnerName;
             
             // Hantera både String och Map (JSON objekt)
             if (winnerObj instanceof String) {
@@ -85,6 +85,8 @@ public class MatchService {
             } else if (winnerObj instanceof java.util.Map) {
                 java.util.Map<?, ?> winnerMap = (java.util.Map<?, ?>) winnerObj;
                 winnerName = (String) winnerMap.get("name");
+            } else {
+                winnerName = null;
             }
             
             if (winnerName != null && !winnerName.isEmpty()) {
