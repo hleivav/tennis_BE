@@ -200,7 +200,7 @@ public class TournamentService {
     }
 
     public TournamentDto findById(Long id) {
-        Tournament tournament = tournamentRepository.findById(id)
+        Tournament tournament = tournamentRepository.findByIdWithMatchesAndPrevMatches(id)
                 .orElseThrow(() -> new RuntimeException("Tournament not found"));
         return mapToDto(tournament);
     }
