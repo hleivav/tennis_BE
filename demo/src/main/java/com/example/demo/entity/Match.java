@@ -39,11 +39,11 @@ public class Match {
     @JoinColumn(name = "winner_id")
     private Player winner;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "prev1_match_id")
     private Match prev1Match;
 
-    @ManyToOne
+    @ManyToOne(fetch = FetchType.EAGER)
     @JoinColumn(name = "prev2_match_id")
     private Match prev2Match;
 
