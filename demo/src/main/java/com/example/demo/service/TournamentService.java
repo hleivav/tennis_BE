@@ -12,6 +12,7 @@ import com.example.demo.repository.PlayerRepository;
 import com.example.demo.repository.TournamentRepository;
 import com.example.demo.repository.AdminRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -199,6 +200,7 @@ public class TournamentService {
         return mapToDto(saved);
     }
 
+    @Transactional
     public TournamentDto findById(Long id) {
         Tournament tournament = tournamentRepository.findByIdWithMatchesAndPrevMatches(id)
                 .orElseThrow(() -> new RuntimeException("Tournament not found"));
