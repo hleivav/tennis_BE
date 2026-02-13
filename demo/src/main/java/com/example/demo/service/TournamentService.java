@@ -291,8 +291,15 @@ public class TournamentService {
                                 }
                                 
                                 md.setIsBye(match.getIsBye());
-                                md.setPrev1MatchId(match.getPrev1Match() != null ? match.getPrev1Match().getId() : null);
-                                md.setPrev2MatchId(match.getPrev2Match() != null ? match.getPrev2Match().getId() : null);
+                                
+                                // Debug-logging för prev-matches
+                                String prev1Id = match.getPrev1Match() != null ? match.getPrev1Match().getId() : null;
+                                String prev2Id = match.getPrev2Match() != null ? match.getPrev2Match().getId() : null;
+                                System.out.println("[TournamentService] Match " + match.getMatchNumber() + 
+                                        " - prev1MatchId=" + prev1Id + ", prev2MatchId=" + prev2Id);
+                                
+                                md.setPrev1MatchId(prev1Id);
+                                md.setPrev2MatchId(prev2Id);
                                 
                                 // Mappa schedule-fälten
                                 md.setScheduleDate(match.getScheduleDate() != null ? match.getScheduleDate().toString() : null);
