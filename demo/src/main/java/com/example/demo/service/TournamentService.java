@@ -202,6 +202,21 @@ public class TournamentService {
     public TournamentDto findById(Long id) {
         Tournament tournament = tournamentRepository.findByIdWithMatchesAndPrevMatches(id)
                 .orElseThrow(() -> new RuntimeException("Tournament not found"));
+        
+        // Explicit ladda prev-matcher för alla matcher (för att undvika lazy loading)
+        if (tournament.getMatches() != null) {
+            tournament.getMatches().forEach(match -> {
+                if (match.getPrev1Match() != null) {
+                    // Accessa prev1Match för att initiera den (lazy loading workaround)
+                    match.getPrev1Match().getId();
+                }
+                if (match.getPrev2Match() != null) {
+                    // Accessa prev2Match för att initiera den (lazy loading workaround)  
+                    match.getPrev2Match().getId();
+                }
+            });
+        }
+        
         return mapToDto(tournament);
     }
 
