@@ -58,6 +58,7 @@ public class TournamentService {
         tournament.setEndDate(dto.getEndDate());
         tournament.setSeedCount(dto.getSeedCount());
         tournament.setReportPassword(dto.getReportPassword());
+        tournament.setSuperTiebreak(dto.getSuperTiebreak());
 
         Admin admin = adminRepository.findById(dto.getCreatedBy())
                 .orElseThrow(() -> new EntityNotFoundException("Admin not found"));
@@ -231,6 +232,7 @@ public class TournamentService {
         dto.setSeedCount(tournament.getSeedCount());
         dto.setReportPassword(tournament.getReportPassword());
         dto.setCreatedBy(tournament.getCreatedBy() != null ? tournament.getCreatedBy().getId() : null);
+        dto.setSuperTiebreak(tournament.getSuperTiebreak());
 
         // Mappa och sortera spelare
         List<PlayerDto> playerDtos = null;

@@ -16,6 +16,7 @@ public class TournamentDto {
     private String reportPassword;
     private Long createdBy;
     private LocalDate createdAt; // valfritt
+    private Boolean superTiebreak;
     private List<PlayerDto> players;
     private List<MatchDto> matches;
     private List<List<MatchDto>> rounds; // valfritt, om du vill skicka bracket-struktur direkt

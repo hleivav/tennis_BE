@@ -27,6 +27,9 @@ public class Tournament {
 
     private Integer seedCount;
     private String reportPassword;
+    
+    @Column(name = "super_tiebreak")
+    private Boolean superTiebreak;
 
     @Column(nullable = false, updatable = false)
     @org.hibernate.annotations.CreationTimestamp
