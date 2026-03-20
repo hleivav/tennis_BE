@@ -5,6 +5,7 @@ import com.example.demo.dto.PlayerDto;
 import com.example.demo.entity.Match;
 import com.example.demo.entity.Tournament;
 import com.example.demo.repository.MatchRepository;
+import com.example.demo.repository.PlayerRepository;
 import com.example.demo.repository.TournamentRepository;
 import org.springframework.stereotype.Service;
 
@@ -17,10 +18,12 @@ import java.util.stream.Collectors;
 public class MatchService {
     private final MatchRepository repo;
     private final TournamentRepository tournamentRepository;
+    private final PlayerRepository playerRepository;
 
-    public MatchService(MatchRepository repo, TournamentRepository tournamentRepository) {
+    public MatchService(MatchRepository repo, TournamentRepository tournamentRepository, PlayerRepository playerRepository) {
         this.repo = repo;
         this.tournamentRepository = tournamentRepository;
+        this.playerRepository = playerRepository;
     }
 
     public List<MatchDto> getByTournament(Long tournamentId) {
@@ -77,33 +80,60 @@ public class MatchService {
         // Uppdatera winner
         if (updates.containsKey("winner")) {
             Object winnerObj = updates.get("winner");
-            final String winnerName;
-            
-            // Hantera både String och Map (JSON objekt)
-            if (winnerObj instanceof String) {
-                winnerName = (String) winnerObj;
-            } else if (winnerObj instanceof java.util.Map) {
-                java.util.Map<?, ?> winnerMap = (java.util.Map<?, ?>) winnerObj;
-                winnerName = (String) winnerMap.get("name");
-            } else {
-                winnerName = null;
-            }
-            
-            if (winnerName != null && !winnerName.isEmpty()) {
-                // Hitta spelaren genom att matcha namn i samma turnering
-                com.example.demo.entity.Player winner = match.getTournament().getPlayers().stream()
-                        .filter(p -> p.getName().equals(winnerName))
-                        .findFirst()
-                        .orElse(null);
 
-                if (winner != null) {
-                    match.setWinner(winner);
-                    System.out.println("[MatchService] Setting winner: " + winner.getName());
-                } else {
-                    System.out.println("[MatchService] Warning: Winner not found in tournament players: " + winnerName);
-                }
+            // Explicit nollställning
+            if (winnerObj == null) {
+                match.setWinner(null);
+                System.out.println("[MatchService] Clearing winner (reset)");
             } else {
-                System.out.println("[MatchService] Warning: Could not extract winner name from: " + winnerObj);
+                final String winnerName;
+
+                // Hantera både String och Map (JSON objekt)
+                if (winnerObj instanceof String) {
+                    winnerName = (String) winnerObj;
+                } else if (winnerObj instanceof java.util.Map) {
+                    java.util.Map<?, ?> winnerMap = (java.util.Map<?, ?>) winnerObj;
+                    winnerName = (String) winnerMap.get("name");
+                } else {
+                    winnerName = null;
+                }
+
+                if (winnerName != null && !winnerName.isEmpty()) {
+                    com.example.demo.entity.Player winner = match.getTournament().getPlayers().stream()
+                            .filter(p -> p.getName().equals(winnerName))
+                            .findFirst()
+                            .orElse(null);
+
+                    if (winner != null) {
+                        match.setWinner(winner);
+                        System.out.println("[MatchService] Setting winner: " + winner.getName());
+                    } else {
+                        System.out.println("[MatchService] Warning: Winner not found in tournament players: " + winnerName);
+                    }
+                } else {
+                    System.out.println("[MatchService] Warning: Could not extract winner name from: " + winnerObj);
+                }
+            }
+        }
+
+        // Uppdatera spelarnamn i B-klass-matcher (vid nollställning av A-klass-resultat)
+        if (updates.containsKey("p1Name")) {
+            Object p1NameObj = updates.get("p1Name");
+            if (match.getP1() != null) {
+                String newName = p1NameObj != null ? (String) p1NameObj : "";
+                match.getP1().setName(newName);
+                playerRepository.save(match.getP1());
+                System.out.println("[MatchService] Updated p1 name to: " + newName);
+            }
+        }
+
+        if (updates.containsKey("p2Name")) {
+            Object p2NameObj = updates.get("p2Name");
+            if (match.getP2() != null) {
+                String newName = p2NameObj != null ? (String) p2NameObj : "";
+                match.getP2().setName(newName);
+                playerRepository.save(match.getP2());
+                System.out.println("[MatchService] Updated p2 name to: " + newName);
             }
         }
 
