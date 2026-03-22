@@ -8,6 +8,8 @@ import com.example.demo.repository.TournamentRepository;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import jakarta.persistence.EntityNotFoundException;
+
 import java.util.List;
 import java.util.stream.Collectors;
 
@@ -26,6 +28,13 @@ public class PlayerService {
         return repo.findByTournamentId(tournamentId).stream()
                 .map(this::toDto)
                 .collect(Collectors.toList());
+    }
+
+    public PlayerDto rename(Long id, String newName) {
+        Player p = repo.findById(id)
+                .orElseThrow(() -> new EntityNotFoundException("Player not found: " + id));
+        p.setName(newName);
+        return toDto(repo.save(p));
     }
 
     public PlayerDto create(PlayerDto dto) {
