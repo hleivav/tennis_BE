@@ -20,6 +20,9 @@ public interface TournamentRepository extends JpaRepository<Tournament, Long> {
            "LEFT JOIN FETCH t.matches m " +
            "LEFT JOIN FETCH m.prev1Match " +
            "LEFT JOIN FETCH m.prev2Match " +
+           "LEFT JOIN FETCH m.p1 " +
+           "LEFT JOIN FETCH m.p2 " +
+           "LEFT JOIN FETCH m.winner " +
            "WHERE t.id = :id")
     Optional<Tournament> findByIdWithMatchesAndPrevMatches(@Param("id") Long id);
 }
