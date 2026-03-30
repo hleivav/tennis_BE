@@ -79,6 +79,28 @@ public class MatchService {
             System.out.println("[MatchService] Setting score: " + score);
         }
 
+        // Uppdatera spelarnamn FÖRST (B-klass har platshållarnamn i DB som måste
+        // bytas ut innan vinnarsökningen körs, annars hittas inte vinnaren via namn-matchning)
+        if (updates.containsKey("p1Name")) {
+            Object p1NameObj = updates.get("p1Name");
+            if (match.getP1() != null) {
+                String newName = p1NameObj != null ? (String) p1NameObj : "";
+                match.getP1().setName(newName);
+                playerRepository.save(match.getP1());
+                System.out.println("[MatchService] Updated p1 name to: " + newName);
+            }
+        }
+
+        if (updates.containsKey("p2Name")) {
+            Object p2NameObj = updates.get("p2Name");
+            if (match.getP2() != null) {
+                String newName = p2NameObj != null ? (String) p2NameObj : "";
+                match.getP2().setName(newName);
+                playerRepository.save(match.getP2());
+                System.out.println("[MatchService] Updated p2 name to: " + newName);
+            }
+        }
+
         // Uppdatera winner
         if (updates.containsKey("winner")) {
             Object winnerObj = updates.get("winner");
@@ -128,27 +150,6 @@ public class MatchService {
                 } else {
                     System.out.println("[MatchService] Warning: Could not extract winner name from: " + winnerObj);
                 }
-            }
-        }
-
-        // Uppdatera spelarnamn i B-klass-matcher (vid nollställning av A-klass-resultat)
-        if (updates.containsKey("p1Name")) {
-            Object p1NameObj = updates.get("p1Name");
-            if (match.getP1() != null) {
-                String newName = p1NameObj != null ? (String) p1NameObj : "";
-                match.getP1().setName(newName);
-                playerRepository.save(match.getP1());
-                System.out.println("[MatchService] Updated p1 name to: " + newName);
-            }
-        }
-
-        if (updates.containsKey("p2Name")) {
-            Object p2NameObj = updates.get("p2Name");
-            if (match.getP2() != null) {
-                String newName = p2NameObj != null ? (String) p2NameObj : "";
-                match.getP2().setName(newName);
-                playerRepository.save(match.getP2());
-                System.out.println("[MatchService] Updated p2 name to: " + newName);
             }
         }
 
