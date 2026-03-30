@@ -99,7 +99,10 @@ public class MatchService {
                 }
 
                 if (winnerName != null && !winnerName.isEmpty()) {
-                    com.example.demo.entity.Player winner = match.getTournament().getPlayers().stream()
+                    // Använd playerRepository för att undvika lazy-loading problem med tournament.getPlayers()
+                    Long tournamentId = match.getTournament().getId();
+                    com.example.demo.entity.Player winner = playerRepository.findByTournamentId(tournamentId)
+                            .stream()
                             .filter(p -> p.getName().equals(winnerName))
                             .findFirst()
                             .orElse(null);
