@@ -99,19 +99,29 @@ public class MatchService {
                 }
 
                 if (winnerName != null && !winnerName.isEmpty()) {
-                    // Använd playerRepository för att undvika lazy-loading problem med tournament.getPlayers()
-                    Long tournamentId = match.getTournament().getId();
-                    com.example.demo.entity.Player winner = playerRepository.findByTournamentId(tournamentId)
-                            .stream()
-                            .filter(p -> p.getName().equals(winnerName))
-                            .findFirst()
-                            .orElse(null);
+                    // Kontrollera matchens egna p1/p2 direkt först (snabbare och mer robust)
+                    com.example.demo.entity.Player winner = null;
+                    if (match.getP1() != null && winnerName.trim().equals(match.getP1().getName() != null ? match.getP1().getName().trim() : "")) {
+                        winner = match.getP1();
+                    } else if (match.getP2() != null && winnerName.trim().equals(match.getP2().getName() != null ? match.getP2().getName().trim() : "")) {
+                        winner = match.getP2();
+                    } else {
+                        // Fallback: sök bland alla turnerings-spelare
+                        Long tournamentId = match.getTournament().getId();
+                        winner = playerRepository.findByTournamentId(tournamentId)
+                                .stream()
+                                .filter(p -> p.getName() != null && p.getName().trim().equals(winnerName.trim()))
+                                .findFirst()
+                                .orElse(null);
+                    }
 
                     if (winner != null) {
                         match.setWinner(winner);
                         System.out.println("[MatchService] Setting winner: " + winner.getName());
                     } else {
-                        System.out.println("[MatchService] Warning: Winner not found in tournament players: " + winnerName);
+                        System.out.println("[MatchService] Warning: Winner not found for name: " + winnerName
+                            + " (p1=" + (match.getP1() != null ? match.getP1().getName() : "null")
+                            + ", p2=" + (match.getP2() != null ? match.getP2().getName() : "null") + ")");
                     }
                 } else {
                     System.out.println("[MatchService] Warning: Could not extract winner name from: " + winnerObj);
