@@ -19,6 +19,6 @@ public interface MatchRepository extends JpaRepository<Match, String> {
     List<Match> findByPrev2MatchId(String prev2MatchId);
     List<Match> findByIsByeTrue();
     
-    @Query("SELECT m FROM Match m LEFT JOIN FETCH m.prev1Match LEFT JOIN FETCH m.prev2Match WHERE m.id = :id")
+    @Query("SELECT m FROM Match m LEFT JOIN FETCH m.prev1Match LEFT JOIN FETCH m.prev2Match LEFT JOIN FETCH m.p1 LEFT JOIN FETCH m.p2 WHERE m.id = :id")
     Optional<Match> findByIdWithPrevMatches(@Param("id") String id);
 }

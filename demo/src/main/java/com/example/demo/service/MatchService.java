@@ -8,6 +8,7 @@ import com.example.demo.repository.MatchRepository;
 import com.example.demo.repository.PlayerRepository;
 import com.example.demo.repository.TournamentRepository;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 import java.util.Comparator;
 import java.util.List;
@@ -66,6 +67,7 @@ public class MatchService {
         }).collect(Collectors.toList());
     }
 
+    @Transactional
     public MatchDto updateMatchResult(String matchId, Map<String, Object> updates) {
         Match match = repo.findByIdWithPrevMatches(matchId)
                 .orElseThrow(() -> new jakarta.persistence.EntityNotFoundException("Match not found: " + matchId));
