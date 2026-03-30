@@ -172,12 +172,16 @@ public class MatchService {
 
                 if (winner != null) {
                     match.setWinner(winner);
-                    System.out.println("[MatchService] Setting winner: " + winner.getName());
+                    System.out.println("[MatchService] Setting winner: " + winner.getName() + " (id=" + winner.getId() + ")");
+                } else {
+                    System.out.println("[MatchService] WARNING: No winner found! winnerId=" + updates.get("winnerId") + ", winnerName=" + updates.get("winner"));
                 }
             }
         }
 
-        Match saved = repo.save(match);
+        System.out.println("[MatchService] Before save: match.winner=" + (match.getWinner() != null ? match.getWinner().getName() + " (id=" + match.getWinner().getId() + ")" : "null"));
+        Match saved = repo.saveAndFlush(match);
+        System.out.println("[MatchService] After saveAndFlush: saved.winner=" + (saved.getWinner() != null ? saved.getWinner().getName() + " (id=" + saved.getWinner().getId() + ")" : "null"));
         System.out.println("[MatchService] Match updated: " + saved.getId());
 
         return toDto(saved);
